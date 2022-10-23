@@ -13,17 +13,17 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        buildTopBar()
+        buildViews()
+        styleViews()
+        buildConstraints()
+        
         databaseDataSource.getItems(completion: { items in
             itemsList = items
-            
             DispatchQueue.main.async {
-                self.buildTopBar()
-                self.buildViews()
-                self.styleViews()
-                self.buildConstraints()
+                self.refreshDataAndTable()
             }
         })
-        
     }
     
     private func buildTopBar() {
@@ -44,7 +44,7 @@ class HomeViewController: UIViewController {
     private func styleViews() {
         tableView.separatorColor = .clear
         tableView.showsVerticalScrollIndicator = false
-        tableView.rowHeight = 150
+        tableView.rowHeight = 120
     }
     
     private func buildConstraints() {
@@ -53,11 +53,19 @@ class HomeViewController: UIViewController {
         })
     }
     
+    private func refreshDataAndTable() {
+        databaseDataSource.getItems(completion: { items in
+            itemsList = items
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        })
+    }
+    
     @objc private func addTapped() {
         let alert = UIAlertController(title: "New TO DO Item", message: "Enter new task", preferredStyle: .alert)
         alert.addTextField()
         alert.addAction(UIAlertAction(title: "Submit", style: .cancel, handler: { [weak alert] _ in
-            
             guard let textFieldData = alert?.textFields?[0].text else {
                 fatalError()
             }
@@ -65,23 +73,10 @@ class HomeViewController: UIViewController {
             self.databaseDataSource.createItem(name: textFieldData, completion: { success in
                 success ? self.refreshDataAndTable() : print("Error")
             })
-
         }))
-        
         present(alert, animated: true)
     }
-    
-    private func refreshDataAndTable() {
-        databaseDataSource.getItems(completion: { items in
-            itemsList = items
-            
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        })
-    }
-    
-    
+
 }
 
 extension HomeViewController: UITableViewDataSource {

@@ -7,6 +7,7 @@ class ToDoTableViewCell: UITableViewCell {
     
     private var cellView: UIView!
     private var toDoText: UILabel!
+    private var toDoDate: UILabel!
     
     private var cellItem: ToDoListItem!
     
@@ -28,7 +29,17 @@ class ToDoTableViewCell: UITableViewCell {
         addSubview(cellView)
         
         toDoText = UILabel()
+        toDoText.textColor = .white
+        toDoText.numberOfLines = 0
+        toDoText.font = UIFont.boldSystemFont(ofSize: 25)
+        toDoText.textAlignment = .left
         cellView.addSubview(toDoText)
+        
+        toDoDate = UILabel()
+        toDoText.font = UIFont.systemFont(ofSize: 20)
+        toDoDate.textColor = .white
+        toDoDate.textAlignment = .right
+        cellView.addSubview(toDoDate)
     }
     
     private func buildConstraints() {
@@ -37,14 +48,24 @@ class ToDoTableViewCell: UITableViewCell {
             $0.top.bottom.equalToSuperview().inset(10)
         })
         
+        toDoDate.snp.makeConstraints({
+            $0.bottom.trailing.equalToSuperview().inset(10)
+            $0.height.equalTo(20)
+        })
+        
         toDoText.snp.makeConstraints({
-            $0.edges.equalToSuperview().inset(20)
+            $0.top.leading.trailing.equalToSuperview().inset(10)
+            $0.bottom.equalTo(toDoDate.snp.top).offset(-10)
         })
     }
     
     func setCellData(toDoItem: ToDoListItem) {
         cellItem = toDoItem
         toDoText.text = cellItem.name
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd/MM/YY"
+        toDoDate.text = dateFormatter.string(from: cellItem.createdAt!)
     }
     
 }
