@@ -97,6 +97,36 @@ extension HomeViewController: UITableViewDataSource {
 
 extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(indexPath)
+        
+        let sheet = UIAlertController(title: "TO DO Item OPTIONS", message: "Edit or Delete", preferredStyle: .actionSheet)
+        
+        sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        sheet.addAction(UIAlertAction(title: "Edit with new text", style: .default, handler: { _ in
+            let alert = UIAlertController(title: "Edit item", message: "Edit your item", preferredStyle: .alert)
+            alert.addTextField()
+            alert.textFields?.first?.text = self.itemsList[indexPath.row].name
+            alert.addAction(UIAlertAction(title: "Save", style: .cancel, handler: { [weak alert] _ in
+                guard let textFieldData = alert?.textFields?[0].text else {
+                    fatalError()
+                }
+            
+                self.databaseDataSource.updateItem(item: self.itemsList[indexPath.row], newName: textFieldData, completion: { success in
+                    success ? self.refreshDataAndTable() : print("Error")
+                })
+            }))
+            self.present(alert, animated: true)
+        }))
+        
+        sheet.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { [weak self] _ in
+            guard let item = self?.itemsList[indexPath.row] else {
+                fatalError()
+            }
+            self?.databaseDataSource.deleteItem(item: item)
+            self?.refreshDataAndTable()
+        }))
+        
+        present(sheet, animated: true)
+        
     }
 }
