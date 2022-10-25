@@ -82,8 +82,7 @@
 		280CAAAB290542E300F7E936 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				280CAA952905395000F7E936 /* HomeViewController.swift */,
-				280CAAAF290555C800F7E936 /* ToDoTableViewCell.swift */,
+				280CAAB82907DBE800F7E936 /* HomeViewController */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -106,6 +105,15 @@
 				280CAAB229056BBF00F7E936 /* ToDoListItem+CoreDataProperties.swift */,
 			);
 			path = ToDoListItem;
+			sourceTree = "<group>";
+		};
+		280CAAB82907DBE800F7E936 /* HomeViewController */ = {
+			isa = PBXGroup;
+			children = (
+				280CAA952905395000F7E936 /* HomeViewController.swift */,
+				280CAAAF290555C800F7E936 /* ToDoTableViewCell.swift */,
+			);
+			path = HomeViewController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
